@@ -56,21 +56,11 @@ public class SignUpServlet extends HttpServlet {
         List<String> errorMessages = new ArrayList<String>();
 
         User user = getUser(request);
-        String account = request.getParameter("account");
-        User existed = new UserService().select(account);
-        if (!isValid(user, errorMessages)) {
+        if (!isValid(request, user, errorMessages)) {
             request.setAttribute("errorMessages", errorMessages);
             request.getRequestDispatcher("signup.jsp").forward(request, response);
             return;
         }
-        if (existed != null) {
-        	//JSPに"errorMessages"って名前で値をリスト型として渡す。
-            request.setAttribute("errorMessages",java.util.Arrays.asList("すでに存在するアカウントです"));
-            //signup.jspに処理を渡す準備して、そのまま渡して処理実行
-            request.getRequestDispatcher("/signup.jsp").forward(request, response);
-            return;
-        }
-
         new UserService().insert(user);
         response.sendRedirect("./");
     }
@@ -90,7 +80,7 @@ public class SignUpServlet extends HttpServlet {
         return user;
     }
 
-    private boolean isValid(User user, List<String> errorMessages) {
+    private boolean isValid(HttpServletRequest request, User user, List<String> errorMessages) {
 
 
 	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
@@ -100,6 +90,7 @@ public class SignUpServlet extends HttpServlet {
         String account = user.getAccount();
         String password = user.getPassword();
         String email = user.getEmail();
+        User existed = new UserService().select(account);
 
         if (!StringUtils.isEmpty(name) && (20 < name.length())) {
             errorMessages.add("名前は20文字以下で入力してください");
@@ -109,6 +100,8 @@ public class SignUpServlet extends HttpServlet {
             errorMessages.add("アカウント名を入力してください");
         } else if (20 < account.length()) {
             errorMessages.add("アカウント名は20文字以下で入力してください");
+        } else if(existed != null){
+        	errorMessages.add("すでに存在するアカウントです");
         }
 
         if (StringUtils.isEmpty(password)) {
@@ -118,6 +111,7 @@ public class SignUpServlet extends HttpServlet {
         if (!StringUtils.isEmpty(email) && (50 < email.length())) {
             errorMessages.add("メールアドレスは50文字以下で入力してください");
         }
+
 
         if (errorMessages.size() != 0) {
             return false;

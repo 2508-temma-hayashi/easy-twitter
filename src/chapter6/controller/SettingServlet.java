@@ -66,27 +66,14 @@ public class SettingServlet extends HttpServlet {
 	    List<String> errorMessages = new ArrayList<String>();
 
 	    User user = getUser(request);
-	    if (isValid(user, errorMessages)) {
-	        try {
-	        	//ここから
-	        	//今ログインしているユーザー情報をセッションから取り出す
-	        	User loginUser = (User) request.getSession().getAttribute("loginUser");
-	        	//設定画面（settings.jsp）で入力された 新しいアカウント名を受け取る
-	        	String account = request.getParameter("account");
-	        	User existed = new UserService().select(account);
-	        	if (existed != null && existed.getId() != loginUser.getId()) {
-	        	    request.setAttribute("errorMessages",java.util.Arrays.asList("すでに存在するアカウントです"));
-	        	    request.getRequestDispatcher("/setting.jsp").forward(request, response);
-	        	    return;
-	        	}
-
-
-	            new UserService().update(user);
-	        } catch (NoRowsUpdatedRuntimeException e) {
-		    log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
-	            errorMessages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
-	        }
-	    }
+        if (isValid(request, user, errorMessages)) {
+            try {
+                new UserService().update(user);
+            } catch (NoRowsUpdatedRuntimeException e) {
+            	log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
+                errorMessages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
+            }
+		}
 
 	    if (errorMessages.size() != 0) {
 	        request.setAttribute("errorMessages", errorMessages);
@@ -97,6 +84,7 @@ public class SettingServlet extends HttpServlet {
 
 	    session.setAttribute("loginUser", user);
 	    response.sendRedirect("./");
+	    
 	}
 
 	private User getUser(HttpServletRequest request) throws IOException, ServletException {
@@ -115,7 +103,7 @@ public class SettingServlet extends HttpServlet {
 	    return user;
 	}
 
-	private boolean isValid(User user, List<String> errorMessages) {
+	private boolean isValid(HttpServletRequest request, User user, List<String> errorMessages) {
 
 
 	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
@@ -137,6 +125,16 @@ public class SettingServlet extends HttpServlet {
 	    if (!StringUtils.isEmpty(email) && (50 < email.length())) {
 	        errorMessages.add("メールアドレスは50文字以下で入力してください");
 	    }
+
+	    if(!StringUtils.isEmpty(account)){
+	    	//今ログインしているユーザー情報をセッションから取り出す
+        	User loginUser = (User) request.getSession().getAttribute("loginUser");
+        	User existed = new UserService().select(account);
+        	if (existed != null && existed.getId() != loginUser.getId()) {
+        		errorMessages.add("すでに存在するアカウントです");
+        	}
+	    }
+
 
 	    if (errorMessages.size() != 0) {
 	        return false;
