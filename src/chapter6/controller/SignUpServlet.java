@@ -33,7 +33,6 @@ public class SignUpServlet extends HttpServlet {
     public SignUpServlet() {
         InitApplication application = InitApplication.getInstance();
         application.init();
-
     }
 
     @Override
@@ -57,11 +56,21 @@ public class SignUpServlet extends HttpServlet {
         List<String> errorMessages = new ArrayList<String>();
 
         User user = getUser(request);
+        String account = request.getParameter("account");
+        User existed = new UserService().select(account);
         if (!isValid(user, errorMessages)) {
             request.setAttribute("errorMessages", errorMessages);
             request.getRequestDispatcher("signup.jsp").forward(request, response);
             return;
         }
+        if (existed != null) {
+        	//JSPに"errorMessages"って名前で値をリスト型として渡す。
+            request.setAttribute("errorMessages",java.util.Arrays.asList("すでに存在するアカウントです"));
+            //signup.jspに処理を渡す準備して、そのまま渡して処理実行
+            request.getRequestDispatcher("/signup.jsp").forward(request, response);
+            return;
+        }
+
         new UserService().insert(user);
         response.sendRedirect("./");
     }

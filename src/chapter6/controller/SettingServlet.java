@@ -68,6 +68,19 @@ public class SettingServlet extends HttpServlet {
 	    User user = getUser(request);
 	    if (isValid(user, errorMessages)) {
 	        try {
+	        	//ここから
+	        	//今ログインしているユーザー情報をセッションから取り出す
+	        	User loginUser = (User) request.getSession().getAttribute("loginUser");
+	        	//設定画面（settings.jsp）で入力された 新しいアカウント名を受け取る
+	        	String account = request.getParameter("account");
+	        	User existed = new UserService().select(account);
+	        	if (existed != null && existed.getId() != loginUser.getId()) {
+	        	    request.setAttribute("errorMessages",java.util.Arrays.asList("すでに存在するアカウントです"));
+	        	    request.getRequestDispatcher("/setting.jsp").forward(request, response);
+	        	    return;
+	        	}
+
+
 	            new UserService().update(user);
 	        } catch (NoRowsUpdatedRuntimeException e) {
 		    log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
@@ -130,4 +143,6 @@ public class SettingServlet extends HttpServlet {
 	    }
 	    return true;
 	}
+
+
 }
