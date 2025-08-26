@@ -84,7 +84,7 @@ public class SettingServlet extends HttpServlet {
 
 	    session.setAttribute("loginUser", user);
 	    response.sendRedirect("./");
-	    
+
 	}
 
 	private User getUser(HttpServletRequest request) throws IOException, ServletException {
@@ -126,14 +126,13 @@ public class SettingServlet extends HttpServlet {
 	        errorMessages.add("メールアドレスは50文字以下で入力してください");
 	    }
 
-	    if(!StringUtils.isEmpty(account)){
-	    	//今ログインしているユーザー情報をセッションから取り出す
-        	User loginUser = (User) request.getSession().getAttribute("loginUser");
-        	User existed = new UserService().select(account);
-        	if (existed != null && existed.getId() != loginUser.getId()) {
-        		errorMessages.add("すでに存在するアカウントです");
+
+	    //今ログインしているユーザー情報をセッションから取り出す
+        User duplicate = new UserService().select(account);
+        if (duplicate != null && duplicate.getId() != user.getId()) {
+        	errorMessages.add("すでに存在するアカウントです");
         	}
-	    }
+
 
 
 	    if (errorMessages.size() != 0) {
