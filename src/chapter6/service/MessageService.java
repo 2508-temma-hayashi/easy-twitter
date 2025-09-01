@@ -96,4 +96,75 @@ public class MessageService {
             close(connection);
         }
     }
+
+    public Message selectByTextId(int messageId) {
+    	Connection connection = null;
+        try {
+        	//つなげる
+          connection = getConnection();
+          //DBからtextを1件抽出するDAOのメソッドを使う
+          Message message = new MessageDao().select(connection, messageId);
+          return message;
+
+        } catch (RuntimeException e) {
+            rollback(connection);
+		log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+            throw e;
+        } catch (Error e) {
+            rollback(connection);
+		log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+            throw e;
+        } finally {
+            close(connection);
+        }
+
+    }
+
+    public void updateMessage (int messageId, String messageText) {
+    	Connection connection = null;
+        try {
+        	//DBにつなげる
+          connection = getConnection();
+          //DAOのupdateメソッドで
+          new MessageDao().updateText(connection, messageId, messageText);
+          commit(connection);
+
+
+        } catch (RuntimeException e) {
+            rollback(connection);
+		log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+            throw e;
+        } catch (Error e) {
+            rollback(connection);
+		log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+            throw e;
+        } finally {
+            close(connection);
+        }
+
+    }
+
+
+    public void deleteMessage(int messageId){
+    	//ログに記録させるためのもの
+        log.info(getClass().getName() + " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+        //DBに接続
+        Connection connection = null;
+        try {
+            connection = getConnection();
+
+            // 削除
+            new MessageDao().delete(connection, messageId);
+
+            commit(connection);
+        } catch (RuntimeException e) {
+            rollback(connection);
+            log.log(Level.SEVERE,new Object(){}.getClass().getName() + " : " + e.toString(), e);
+            throw e;
+        } finally {
+            close(connection);
+        }
+    }
 }
+
+

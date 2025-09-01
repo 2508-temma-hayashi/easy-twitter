@@ -53,6 +53,7 @@
 				</div>
 				<div class="messages">
 				    <c:forEach items="${messages}" var="message">
+				    	<!-- メッセージの塊大枠。範囲を指定するdiv、classは名前を付けている-->
 				        <div class="message">
 				            <div class="account-name">
 								<span class="account">
@@ -62,8 +63,22 @@
 								</span>
 				                <span class="name"><c:out value="${message.name}" /></span>
 				            </div>
-				            <div class="text"><c:out value="${message.text}" /></div>
+				            <div class="text" style="white-space: pre-wrap;"><c:out value="${message.text}" /></div>
 				            <div class="date"><fmt:formatDate value="${message.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" /></div>
+
+						   <c:if test="${not empty loginUser and loginUser.id == message.userId}">
+						        <form action="deleteMessage" method="post">
+						            <input type="hidden" name="id" value="${message.id}">
+						            <input type="submit" value="削除"/>
+						         </form>
+						         <!-- divクラスで分けるとわかりやすかった。devは目印なる。編集(CSS)の時にも使える。 -->
+						         	<form action="edit" method="get" style="display:inline;">
+        								<input type="hidden" name="id" value="${message.id}">
+        								<input type="submit" value="編集"/>
+   									</form>
+						   </c:if>
+
+
 				        </div>
 				    </c:forEach>
 				</div>

@@ -66,13 +66,19 @@ public class MessageServlet extends HttpServlet {
         response.sendRedirect("./");
     }
 
+
+
+
+
+
+
     private boolean isValid(String text, List<String> errorMessages) {
 
 	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         if (StringUtils.isBlank(text)) {
-            errorMessages.add("メッセージを入力してください");
+            errorMessages.add("入力してください");
         } else if (140 < text.length()) {
             errorMessages.add("140文字以下で入力してください");
         }

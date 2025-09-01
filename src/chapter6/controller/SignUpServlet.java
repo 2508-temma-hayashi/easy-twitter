@@ -57,8 +57,8 @@ public class SignUpServlet extends HttpServlet {
 
         User user = getUser(request);
         if (!isValid(request, user, errorMessages)) {
-            request.setAttribute("errorMessages", errorMessages);
-            request.getRequestDispatcher("signup.jsp").forward(request, response);
+        	request.setAttribute("errorMessage", "不正なパラメータが入力されました");
+        	request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;
         }
         new UserService().insert(user);
