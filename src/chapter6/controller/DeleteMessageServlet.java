@@ -23,7 +23,7 @@ public class DeleteMessageServlet extends HttpServlet{
 		//サービスクラスを呼び出して削除を実行
 		//自分の投稿だけを消すためにログインしてる人のIDを渡す。
 		MessageService service = new MessageService();
-		service.deleteMessage(messageId);
+		service.delete(messageId);
 
 		//リダイレクトでtopservletの一覧表示にとばす
 		response.sendRedirect("./");

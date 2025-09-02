@@ -6,6 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,12 +70,11 @@ public class MessageDao {
 
     public void delete(Connection connection, int messageId) {
     	log.info(getClass().getName() + " : " + new Object(){}.getClass().getEnclosingMethod().getName());
-
-        String sql = "DELETE FROM messages WHERE id = ?";
         //DBに送るための箱
         PreparedStatement ps = null;
 
         try {
+        	String sql = "DELETE FROM messages WHERE id = ?";
         	//文を準備してIDをセットして削除を実行
         	ps = connection.prepareStatement(sql);
         	ps.setInt(1, messageId);
@@ -91,9 +93,9 @@ public class MessageDao {
     public Message select(Connection connection, int messageId) {
     	//ログを付ける
     	log.info(getClass().getName() + " : " + new Object(){}.getClass().getEnclosingMethod().getName());
-    	String sql = "SELECT text, id FROM messages WHERE id = ?";
     	PreparedStatement ps = null;
-	    try {
+    	try {
+	    	String sql = "SELECT * FROM messages WHERE id = ?";
 			//SQL文をとりあえずDBに送る（便利なので）
 			ps = connection.prepareStatement(sql);
 			//sqlの1つ目の？にmessageIdを入れる
@@ -101,15 +103,13 @@ public class MessageDao {
 			//実行した結果をResultSetに入れる  SELECTだからexecuteQuery()！！データ更新ならexecuteUpdate()！
 			ResultSet rs = ps.executeQuery();
 			//rs.next()) で次の行に進むもしもないならnullを返す
-			if (!rs.next()) {
-	            return null;
-	        }
-			//messageオブジェクトを作って、その中にテキストのＩＤとテキストを入れる
-			Message m = new Message();
-			m.setId(messageId);
-            m.setText(rs.getString("text"));
+            List<Message> messages = toMessages(rs);
+            if (messages.isEmpty()) {
+                return null;
+            } else {
+                return messages.get(0);
+            }
 
-			return m;
 
 	    }catch (SQLException e) {
 	        log.log(Level.SEVERE, getClass().getName() + " : " + e, e);
@@ -123,17 +123,19 @@ public class MessageDao {
     public void updateText(Connection connection, int messageId, String text) {
     	//ログを付ける
     	log.info(getClass().getName() + " : " + new Object(){}.getClass().getEnclosingMethod().getName());
-    	//sql文を作る コマンド＋テーブル名
-    	String sql = "UPDATE messages SET text = ? WHERE id = ?";
     	//DBに送るための箱をつくる
     	PreparedStatement ps = null;
     	try {
+    		//sql文を作る コマンド＋テーブル名
+        	String sql = "UPDATE messages SET text = ? , updated_date = ? WHERE id = ? ";
     		//SQL文をとりあえずDBに送る（便利なので）
     		ps = connection.prepareStatement(sql);
     		//sqlの1つ目の？にtextを入れる
     		ps.setString(1, text);
-    		//sqlの2つ目の？にmessageIdを入れる
-        	ps.setInt(2, messageId);
+    		//sqlの2つ目の？にtimestampを入れる
+    		ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+    		//三つ目にいれる
+        	ps.setInt(3, messageId);
         	ps.executeUpdate();
     	}catch (SQLException e) {
             log.log(Level.SEVERE, getClass().getName() + " : " + e, e);
@@ -143,6 +145,25 @@ public class MessageDao {
 	    }
     }
 
+    private List<Message> toMessages(ResultSet rs) throws SQLException {
+
+            List<Message> messages = new ArrayList<Message>();
+            try {
+                while (rs.next()) {
+                    Message message = new Message();
+                    message.setId(rs.getInt("id"));
+                    message.setUserId(rs.getInt("user_Id"));
+                    message.setText(rs.getString("text"));
+                    message.setCreatedDate(rs.getTimestamp("created_date"));
+                    message.setUpdatedDate(rs.getTimestamp("updated_date"));
+
+                    messages.add(message);
+                }
+                return messages;
+            } finally {
+                close(rs);
+           }
+        }
 }
 
 

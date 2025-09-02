@@ -97,7 +97,8 @@ public class MessageService {
         }
     }
 
-    public Message selectByTextId(int messageId) {
+    //つぶやきの編集編集画面の表示のための取得
+    public Message select(int messageId) {
     	Connection connection = null;
         try {
         	//つなげる
@@ -120,7 +121,8 @@ public class MessageService {
 
     }
 
-    public void updateMessage (int messageId, String messageText) {
+    //つぶやきの編集
+    public void update (int messageId, String messageText) {
     	Connection connection = null;
         try {
         	//DBにつなげる
@@ -145,7 +147,7 @@ public class MessageService {
     }
 
 
-    public void deleteMessage(int messageId){
+    public void delete(int messageId){
     	//ログに記録させるためのもの
         log.info(getClass().getName() + " : " + new Object(){}.getClass().getEnclosingMethod().getName());
         //DBに接続

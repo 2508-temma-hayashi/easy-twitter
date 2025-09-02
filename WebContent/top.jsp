@@ -66,7 +66,7 @@
 				            <div class="text" style="white-space: pre-wrap;"><c:out value="${message.text}" /></div>
 				            <div class="date"><fmt:formatDate value="${message.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" /></div>
 
-						   <c:if test="${not empty loginUser and loginUser.id == message.userId}">
+						   <c:if test="${loginUser.id == message.userId}">
 						        <form action="deleteMessage" method="post">
 						            <input type="hidden" name="id" value="${message.id}">
 						            <input type="submit" value="削除"/>

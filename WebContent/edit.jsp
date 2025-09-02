@@ -12,9 +12,9 @@
 </head>
 <body>
 	<div class="header">
-					<a href="../">ホーム</a>
-			        <a href="setting">設定</a>
-			        <a href="logout">ログアウト</a>
+		<a href="../">ホーム</a>
+		<a href="setting">設定</a>
+		<a href="logout">ログアウト</a>
 	</div>
 
 	<div class="main-contents">
@@ -27,7 +27,7 @@
 
      		<input type="submit" value="更新">
     	</form>
-    			<a class="back" href="top">戻る</a>
+    		<a class="back" href="top">戻る</a>
     	<!-- 誰が作ったか書いてるだけ -->
     	<div class="copyright"> Copyright(c)Temma Hayashi</div>
    </div>
