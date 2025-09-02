@@ -77,11 +77,28 @@
         								<input type="submit" value="編集"/>
    									</form>
 						   </c:if>
-
-
 				        </div>
+
+
+				        <%--返信欄と返信ボタン
+
+				       <div class="form-area">
+				   		 <c:if test="${ isShowMessageForm }">
+				        			<form action="comment" method="post">
+				       					<!-- どの投稿への返信か -->
+       									 <input type="hidden" name="parentId" value="${message.id}"/>
+				           			 		返信<br />
+				           			 <textarea name="text" cols="100" rows="5" class="tweet-box"></textarea>
+				           			 <br />
+				           		 <input type="submit" value="送信">
+				       		 </form>
+				  		  </c:if>
+						</div> --%>
+
 				    </c:forEach>
 				</div>
+
+
             	<div class="copyright"> Copyright(c)Temma Hayashi</div>
         	</div>
     </body>
