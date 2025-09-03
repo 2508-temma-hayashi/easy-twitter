@@ -124,13 +124,11 @@ public class MessageService {
     //つぶやきの編集
     public void update(Message message) {
     	Connection connection = null;
-    	int messageId = message.getId();
-    	String messageText = message.getText();
         try {
         	//DBにつなげる
           connection = getConnection();
           //DAOのupdateメソッドで
-          new MessageDao().update(connection, messageId, messageText);
+          new MessageDao().update(connection, message);
           commit(connection);
 
 

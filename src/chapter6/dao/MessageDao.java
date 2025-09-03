@@ -119,7 +119,9 @@ public class MessageDao {
     }
 
     //textを更新するメソッド
-    public void update(Connection connection, int messageId, String text) {
+    public void update(Connection connection, Message message) {
+    	int messageId = message.getId();
+    	String text = message.getText();
     	//ログを付ける
     	log.info(getClass().getName() + " : " + new Object(){}.getClass().getEnclosingMethod().getName());
     	//DBに送るための箱をつくる
