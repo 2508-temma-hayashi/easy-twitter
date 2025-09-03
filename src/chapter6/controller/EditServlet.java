@@ -35,7 +35,7 @@ import chapter6.service.MessageService;
 				//リクエストの箱の中にエラーメッセージを詰めてる。（setAttributeメソッド）
 				session.setAttribute("errorMessages", java.util.Arrays.asList("不正なパラメータが入力されました"));
 				//getRequestDispatcherでどこに渡すか準備してforwardでrequest と responseを渡す
-				response.sendRedirect(request.getContextPath() + "/top.jsp");
+				response.sendRedirect("./");
 				return;
 			}
 
@@ -49,7 +49,7 @@ import chapter6.service.MessageService;
 				//リクエストの箱の中にエラーメッセージを詰めてる。（setAttributeメソッド）
 				session.setAttribute("errorMessages", java.util.Arrays.asList("不正なパラメータが入力されました"));
 				//getRequestDispatcherでどこに渡すか準備してforwardでrequest と responseを渡す
-				response.sendRedirect(request.getContextPath() + "/top.jsp");
+				response.sendRedirect("./");
 				return;
 			}
 
@@ -58,7 +58,7 @@ import chapter6.service.MessageService;
 			//リクエストの中にメッセージ属性でtextを入れておく
 			request.setAttribute("message", message);
 			//それを"/edit.jsp"に渡す。リクエストを引き継いで。
-			request.getRequestDispatcher("/edit.jsp").forward(request, response);
+			request.getRequestDispatcher("edit.jsp").forward(request, response);
 		}
 
 		@Override
@@ -71,20 +71,25 @@ import chapter6.service.MessageService;
 			String messageText = request.getParameter("text");
 
 			//有効性確認の段階
+			//{./}これは今のディレクトリ
 			HttpSession session = request.getSession();
 			List<String> errorMessages = new ArrayList<String>();
+			Message message = new Message();
+			message.setText(messageText);
+			message.setId(messageId);
 			if (!isValid(messageText, errorMessages)) {
 	            session.setAttribute("errorMessages", errorMessages);
-	            response.sendRedirect("./");
+	            request.setAttribute("message", message);
+	            request.getRequestDispatcher("/edit.jsp").forward(request, response);
 	            return;
 	        }
 
 			//サービスクラスを呼び出して削除を実行
 		    //自分の投稿だけ更新消すためにログインしてる人のIDを渡す。
-			new MessageService().update(messageId, messageText);
+			new MessageService().update(message);
 
 			//リダイレクトでtopservletの一覧表示にとばす(sendRedirectメソッド）
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
+			response.sendRedirect("./");
 		}
 
 
@@ -92,11 +97,14 @@ import chapter6.service.MessageService;
 		private boolean isValid(String text, List<String> errorMessages) {
 		    if (StringUtils.isBlank(text)) {
 		        errorMessages.add("入力してください");
-		    }
+		    }else if (140 < text.length()) {
+	            errorMessages.add("140文字以下で入力してください");
+	        }
 		    if (errorMessages.size() != 0) {
 		        return false;
+
 		    }
 		    return true;
 	}
-	}
+}
 

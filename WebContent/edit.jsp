@@ -17,6 +17,19 @@
 		<a href="logout">ログアウト</a>
 	</div>
 
+	<!-- エラーがあった場合に表示する -->
+		<c:if test="${ not empty errorMessages }">
+				<div class="errorMessages">
+				     <ul>
+				        <c:forEach items="${errorMessages}" var="errorMessage">
+				            <li><c:out value="${errorMessage}" />
+				        </c:forEach>
+					 </ul>
+				</div>
+			<c:remove var="errorMessages" scope="session" />
+		</c:if>
+
+
 	<div class="main-contents">
 		<!-- 入力フォーム　送信するときに使うHTTPメソッドの種類を指定 -->
 		<form action="edit" method="post">

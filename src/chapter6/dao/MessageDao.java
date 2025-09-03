@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -120,22 +119,20 @@ public class MessageDao {
     }
 
     //textを更新するメソッド
-    public void updateText(Connection connection, int messageId, String text) {
+    public void update(Connection connection, int messageId, String text) {
     	//ログを付ける
     	log.info(getClass().getName() + " : " + new Object(){}.getClass().getEnclosingMethod().getName());
     	//DBに送るための箱をつくる
     	PreparedStatement ps = null;
     	try {
     		//sql文を作る コマンド＋テーブル名
-        	String sql = "UPDATE messages SET text = ? , updated_date = ? WHERE id = ? ";
+        	String sql = "UPDATE messages SET text = ? , updated_date = CURRENT_TIMESTAMP WHERE id = ? ";
     		//SQL文をとりあえずDBに送る（便利なので）
     		ps = connection.prepareStatement(sql);
     		//sqlの1つ目の？にtextを入れる
     		ps.setString(1, text);
-    		//sqlの2つ目の？にtimestampを入れる
-    		ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-    		//三つ目にいれる
-        	ps.setInt(3, messageId);
+    		//２つ目にいれる
+        	ps.setInt(2, messageId);
         	ps.executeUpdate();
     	}catch (SQLException e) {
             log.log(Level.SEVERE, getClass().getName() + " : " + e, e);
@@ -152,7 +149,7 @@ public class MessageDao {
                 while (rs.next()) {
                     Message message = new Message();
                     message.setId(rs.getInt("id"));
-                    message.setUserId(rs.getInt("user_Id"));
+                    message.setUserId(rs.getInt("user_id"));
                     message.setText(rs.getString("text"));
                     message.setCreatedDate(rs.getTimestamp("created_date"));
                     message.setUpdatedDate(rs.getTimestamp("updated_date"));
