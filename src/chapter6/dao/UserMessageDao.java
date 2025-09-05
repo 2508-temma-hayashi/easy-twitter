@@ -36,7 +36,7 @@ public class UserMessageDao {
     public List<UserMessage> select(Connection connection,Integer userId, Timestamp start,
             Timestamp end, int num) {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         PreparedStatement ps = null;
@@ -58,6 +58,7 @@ public class UserMessageDao {
             }
             sql.append("ORDER BY created_date DESC limit " + num);
             ps = connection.prepareStatement(sql.toString());
+
 
             ps.setTimestamp(1, start);
             ps.setTimestamp(2, end);

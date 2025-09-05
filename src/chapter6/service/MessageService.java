@@ -37,7 +37,7 @@ public class MessageService {
 
     public void insert(Message message) {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         Connection connection = null;
@@ -79,15 +79,17 @@ public class MessageService {
         }
 
         //UserMessageDAOに渡すのはしょきちかどうか
-        if(StringUtils.isNotEmpty(startParamater)) {
+        if(!StringUtils.isEmpty(startParamater)) {
         	start = Timestamp.valueOf(startParamater + " 00:00:00");
         }else {
-        	start = Timestamp.valueOf("2020-01-01 00:00:00");}
+        	start = Timestamp.valueOf("2020-01-01 00:00:00");
+        	}
 
-        if(StringUtils.isNotEmpty(endParamater)) {
+        if(!StringUtils.isEmpty(endParamater)) {
         	end = Timestamp.valueOf(endParamater + " 23:59:59");
         }else {
-        	end = new Timestamp(System.currentTimeMillis());}
+        	end = new Timestamp(System.currentTimeMillis());
+        	}
 
         /*
         * messageDao.selectに引数としてInteger型のidを追加
