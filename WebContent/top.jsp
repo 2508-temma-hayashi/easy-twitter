@@ -51,12 +51,29 @@
 				        </form>
 				    </c:if>
 				</div>
+
+				<!-- 日付指定 -->
+				<form method="get" action="./">
+					日付
+						<input type="date" name="start" value = "${start}">
+					  	～
+					 	<input type="date" name="end" value = "${end}">
+					 <button type="submit">絞込</button>
+				</form>
+
 				<div class="messages">
+					<!--c:forEachはループ処理-->
+					<!-- itemsは繰り返す対象を指定する。今回はEL 式 のmessagesリストからvarに入れて繰り返す -->
 				    <c:forEach items="${messages}" var="message">
 				    	<!-- メッセージの塊大枠。範囲を指定するdiv、classは名前を付けている-->
 				        <div class="message">
 				            <div class="account-name">
+				            	<!-- spanただのタグ -->
 								<span class="account">
+									<!-- aはリンクのタグクリックするとhrefに書いてるURLに飛ぶ -->
+									<!-- ./ は「今いるページと同じ場所」を意味する相対パス。
+									?user_id=15の？はここからパラメータの始まるよって意味
+									user_idというキーに15という値をセットして、URLの後ろに渡している。 -->
 								    <a href="./?user_id=<c:out value="${message.userId}"/> ">
 								        <c:out value="${message.account}" />
 								    </a>
@@ -78,23 +95,38 @@
    									</form>
 						   </c:if>
 				        </div>
-
-
-				        <%--返信欄と返信ボタン
-
 				       <div class="form-area">
 				   		 <c:if test="${ isShowMessageForm }">
 				        			<form action="comment" method="post">
 				       					<!-- どの投稿への返信か -->
-       									 <input type="hidden" name="parentId" value="${message.id}"/>
+       									 <input type="hidden" name="id" value="${message.id}"/>
 				           			 		返信<br />
 				           			 <textarea name="text" cols="100" rows="5" class="tweet-box"></textarea>
 				           			 <br />
 				           		 <input type="submit" value="送信">
 				       		 </form>
 				  		  </c:if>
-						</div> --%>
-
+						</div>
+						<!--  -->
+						<div class="replies">
+							<c:forEach items="${comments}" var="comment">
+								    <!-- この投稿に対する返信か？ -->
+   								<c:if test="${comment.messageId eq message.id}">
+									<div class = "account">
+										<c:out value="${comment.account}" />
+									<span class = "name">
+										<c:out value="${comment.name}" />
+									</span>
+									</div>
+									<div class="text">
+    									<pre><c:out value="${comment.text}" /></pre>
+									</div>
+									<div class = "date">
+									<fmt:formatDate value="${comment.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" />	
+									</div>
+								</c:if>
+							</c:forEach>
+						</div>
 				    </c:forEach>
 				</div>
 

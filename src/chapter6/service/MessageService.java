@@ -4,6 +4,7 @@ import static chapter6.utils.CloseableUtil.*;
 import static chapter6.utils.DBUtil.*;
 
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,9 +61,10 @@ public class MessageService {
     /*
      * selectの引数にString型のuserIdを追加
      */
-    public List<UserMessage> select(String userId) {
+    public List<UserMessage> select(String userId, String startParamater, String endParamater) {
       final int LIMIT_NUM = 1000;
-
+      Timestamp start;
+      Timestamp end;
       Connection connection = null;
       try {
         connection = getConnection();
@@ -76,12 +78,23 @@ public class MessageService {
             id = Integer.parseInt(userId);
         }
 
+        //UserMessageDAOに渡すのはしょきちかどうか
+        if(StringUtils.isNotEmpty(startParamater)) {
+        	start = Timestamp.valueOf(startParamater + " 00:00:00");
+        }else {
+        	start = Timestamp.valueOf("2020-01-01 00:00:00");}
+
+        if(StringUtils.isNotEmpty(endParamater)) {
+        	end = Timestamp.valueOf(endParamater + " 23:59:59");
+        }else {
+        	end = new Timestamp(System.currentTimeMillis());}
+
         /*
         * messageDao.selectに引数としてInteger型のidを追加
         * idがnullだったら全件取得する
         * idがnull以外だったら、その値に対応するユーザーIDの投稿を取得する
         */
-        List<UserMessage> messages = new UserMessageDao().select(connection, id, LIMIT_NUM);
+        List<UserMessage> messages = new UserMessageDao().select(connection, id, start, end, LIMIT_NUM);
             return messages;
 
         } catch (RuntimeException e) {

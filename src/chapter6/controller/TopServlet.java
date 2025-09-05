@@ -11,10 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import chapter6.beans.User;
+import chapter6.beans.UserComment;
 import chapter6.beans.UserMessage;
 import chapter6.logging.InitApplication;
+import chapter6.service.CommentService;
 import chapter6.service.MessageService;
 
+
+//URLを指定
 @WebServlet(urlPatterns = { "/index.jsp" })
 public class TopServlet extends HttpServlet {
 
@@ -41,8 +45,9 @@ public class TopServlet extends HttpServlet {
 
 	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
-
+	  	//ログインしている人しか通さない初期化
         boolean isShowMessageForm = false;
+        //(User)でキャストしている getsessionでセッション情報を取り出す。その中からxUserを取り出す
         User user = (User) request.getSession().getAttribute("loginUser");
         if (user != null) {
             isShowMessageForm = true;
@@ -52,11 +57,25 @@ public class TopServlet extends HttpServlet {
          * JSPから受け取るように設定
          * MessageServiceのselectに引数としてString型のuser_idを追加
          */
+        //ユーザーが入力したパラメーターからIDを取り出す
         String userId = request.getParameter("user_id");
-        List<UserMessage> messages = new MessageService().select(userId);
+        String start = request.getParameter("start");
+        String end   = request.getParameter("end");
+        //取り出したIDを使ってselectメソッドで本文を取り出す
+        List<UserMessage> messages = new MessageService().select(userId, start, end);
 
+        List<UserComment>comments = new CommentService().select();
+
+        //リクエストの中につぶやきを入れる。JSP 側で ${messages}とかくと参照できる
         request.setAttribute("messages", messages);
         request.setAttribute("isShowMessageForm", isShowMessageForm);
+        request.setAttribute("comments", comments);
+        request.setAttribute("start", start);
+        request.setAttribute("end", end);
+        //リクエストをフォワード。セットした値をJSPが使える
         request.getRequestDispatcher("/top.jsp").forward(request, response);
     }
+
+
 }
+

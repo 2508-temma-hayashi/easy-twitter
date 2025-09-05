@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,8 +32,9 @@ public class UserMessageDao {
         application.init();
 
     }
-
-    public List<UserMessage> select(Connection connection,Integer userId, int num) {
+    //これは
+    public List<UserMessage> select(Connection connection,Integer userId, Timestamp start,
+            Timestamp end, int num) {
 
 	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
@@ -50,15 +52,18 @@ public class UserMessageDao {
             sql.append("FROM messages ");
             sql.append("INNER JOIN users ");
             sql.append("ON messages.user_id = users.id ");
+            sql.append("WHERE messages.created_date BETWEEN ? AND ? ");
             if (userId != null) {
-                sql.append("WHERE messages.user_id = ? ");//質問するとこ
+                sql.append("AND messages.user_id = ? ");//質問するとこ
             }
             sql.append("ORDER BY created_date DESC limit " + num);
             ps = connection.prepareStatement(sql.toString());
-            if (userId != null) {
-                ps.setInt(1, userId);
-            }
 
+            ps.setTimestamp(1, start);
+            ps.setTimestamp(2, end);
+            if (userId != null) {
+                ps.setInt(3, userId);
+            }
             ResultSet rs = ps.executeQuery();
 
             List<UserMessage> messages = toUserMessages(rs);

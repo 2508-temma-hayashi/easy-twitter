@@ -1,5 +1,5 @@
 package chapter6.filter;
-//リクエストレスポンスの文字コードを統一するクラス
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
