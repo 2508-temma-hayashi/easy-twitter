@@ -24,10 +24,9 @@ public class UserCommentDao {
 	}
 	public List<UserComment> select(Connection connection) {
 
-		  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 	        " : " + new Object(){}.getClass().getEnclosingMethod().getName());
-
-	        PreparedStatement ps = null;
+		PreparedStatement ps = null;
 
 	        try {
 	        	StringBuilder sql = new StringBuilder();
@@ -49,23 +48,20 @@ public class UserCommentDao {
 	        //SQLをデータに送るための準備のオブジェクト
 	        	ps = connection.prepareStatement(sql.toString());
 	        //SQLに投げた結果を受け取るオブジェクト
-	        ResultSet rs = ps.executeQuery();
+	        	ResultSet rs = ps.executeQuery();
 
 
 
 	        //SQLの結果をtoComments(rs)で一行ずつ読みとってJAVAの中に入れている
-	        List<UserComment> comments = toUserComments(rs);
-	        return comments;
+	        	List<UserComment> comments = toUserComments(rs);
+	        	return comments;
 
-	    } catch (SQLException e) {
-	    	log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	        throw new SQLRuntimeException(e);
-	    } finally {
-	        close(ps);
-	    }
-
-
-
+	        } catch (SQLException e) {
+	        	log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+	        	throw new SQLRuntimeException(e);
+	        } finally {
+	        	close(ps);
+	        }
 	 }
 
 	 private List<UserComment> toUserComments(ResultSet rs) throws SQLException {

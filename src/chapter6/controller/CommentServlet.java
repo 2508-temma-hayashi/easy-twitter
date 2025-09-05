@@ -66,17 +66,17 @@ public class CommentServlet extends HttpServlet {
 
 	private boolean isValid(String text, List<String> errorMessages) {
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-		        " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-			if (StringUtils.isBlank(text)) {
-		        errorMessages.add("メッセージを入力してください");
-		    }else if (140 < text.length()) {
-	            errorMessages.add("140文字以下で入力してください");
-	        }
-		    if (errorMessages.size() != 0) {
-		        return false;
-		    }
-		    return true;
+		if (StringUtils.isBlank(text)) {
+			errorMessages.add("メッセージを入力してください");
+		}else if (140 < text.length()) {
+	        errorMessages.add("140文字以下で入力してください");
+	    }
+		if (errorMessages.size() != 0) {
+		    return false;
+		}
+		return true;
 	}
 }
 

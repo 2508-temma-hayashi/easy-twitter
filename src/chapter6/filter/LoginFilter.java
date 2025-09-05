@@ -1,6 +1,6 @@
-	package chapter6.filter;
-	//リクエストレスポンスの文字コードを統一するクラス
-	import java.io.IOException;
+package chapter6.filter;
+//リクエストレスポンスの文字コードを統一するクラス
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +46,9 @@ public class LoginFilter implements Filter {
 		    // 未ログインなのでログイン画面へリダイレクト④これも親クラスだから変換したものを使う。
 			httpResponse.sendRedirect("./login");
 			return;
-			}
-			chain.doFilter(request, response); // サーブレットを実行
 		}
+		chain.doFilter(request, response); // サーブレットを実行
+	}
 
 	@Override
 	public void init(FilterConfig config) {

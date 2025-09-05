@@ -43,7 +43,7 @@ public class MessageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         HttpSession session = request.getSession();
@@ -74,7 +74,7 @@ public class MessageServlet extends HttpServlet {
 
     private boolean isValid(String text, List<String> errorMessages) {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         if (StringUtils.isBlank(text)) {

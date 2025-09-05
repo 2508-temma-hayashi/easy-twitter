@@ -47,23 +47,22 @@ public class CommentService {
 	//つぶやきの返信全件取得
 	public List<UserComment> select() {
 		Connection connection = null;
-	      try {
-	        connection = getConnection();
+	    try {
+	    	connection = getConnection();
+	    	List<UserComment> comments = new UserCommentDao().select(connection);
+	        return comments;
 
-	        List<UserComment> comments = new UserCommentDao().select(connection);
-	            return comments;
-
-	        } catch (RuntimeException e) {
-	            rollback(connection);
+	    } catch (RuntimeException e) {
+	    	rollback(connection);
+	    	log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+	        throw e;
+	    } catch (Error e) {
+	    	rollback(connection);
 			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	            throw e;
-	        } catch (Error e) {
-	            rollback(connection);
-			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	            throw e;
-	        } finally {
-	            close(connection);
-	        }
+	        throw e;
+	    } finally {
+	    	close(connection);
 	    }
+	}
 
 }

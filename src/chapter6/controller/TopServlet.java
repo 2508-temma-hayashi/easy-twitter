@@ -47,7 +47,7 @@ public class TopServlet extends HttpServlet {
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 	  //ログインしている人しか通さない初期化
       boolean isShowMessageForm = false;
-      //(User)でキャストしている getsessionでセッション情報を取り出す。その中からxUserを取り出す
+      //(User)でキャストしている getsessionでセッション情報を取り出す。その中からUserを取り出す
       User user = (User) request.getSession().getAttribute("loginUser");
       if (user != null) {
     	  isShowMessageForm = true;

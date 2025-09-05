@@ -24,35 +24,35 @@ public class CommentDao {
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 		        " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-		        PreparedStatement ps = null;
-		        try {
-		            StringBuilder sql = new StringBuilder();
-		            sql.append("INSERT INTO comments ( ");
-		            sql.append("    user_id, ");
-		            sql.append("    text, ");
-		            sql.append("    message_id, ");
-		            sql.append("    created_date, ");
-		            sql.append("    updated_date ");
-		            sql.append(") VALUES ( ");
-		            sql.append("    ?, ");                  // user_id
-		            sql.append("    ?, ");                  // text
-		            sql.append("    ?, ");					//message_id
-		            sql.append("    CURRENT_TIMESTAMP, ");  // created_date
-		            sql.append("    CURRENT_TIMESTAMP ");   // updated_date
-		            sql.append(")");
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("INSERT INTO comments ( ");
+			sql.append("    user_id, ");
+		    sql.append("    text, ");
+		    sql.append("    message_id, ");
+		    sql.append("    created_date, ");
+		    sql.append("    updated_date ");
+		    sql.append(") VALUES ( ");
+		    sql.append("    ?, ");                  // user_id
+		    sql.append("    ?, ");                  // text
+		    sql.append("    ?, ");					//message_id
+		    sql.append("    CURRENT_TIMESTAMP, ");  // created_date
+		    sql.append("    CURRENT_TIMESTAMP ");   // updated_date
+		    sql.append(")");
 
-		            ps = connection.prepareStatement(sql.toString());
+		    ps = connection.prepareStatement(sql.toString());
 
-		            ps.setInt(1, comment.getUserId());
-		            ps.setString(2, comment.getText());
-		            ps.setInt(3, comment.getMessageId());
+		    ps.setInt(1, comment.getUserId());
+		    ps.setString(2, comment.getText());
+		    ps.setInt(3, comment.getMessageId());
 
-		            ps.executeUpdate();
-		        } catch (SQLException e) {
-				log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-		            throw new SQLRuntimeException(e);
-		        } finally {
-		            close(ps);
-		        }
-		    }
+		    ps.executeUpdate();
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
 }

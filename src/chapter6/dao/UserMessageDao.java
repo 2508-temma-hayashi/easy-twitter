@@ -70,7 +70,7 @@ public class UserMessageDao {
             List<UserMessage> messages = toUserMessages(rs);
             return messages;
         } catch (SQLException e) {
-		log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+        	log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
             throw new SQLRuntimeException(e);
         } finally {
             close(ps);
@@ -80,21 +80,20 @@ public class UserMessageDao {
     private List<UserMessage> toUserMessages(ResultSet rs) throws SQLException {
 
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-        " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-        List<UserMessage> messages = new ArrayList<UserMessage>();
-        try {
-            while (rs.next()) {
-                UserMessage message = new UserMessage();
-                message.setId(rs.getInt("id"));
-                message.setText(rs.getString("text"));
-                message.setUserId(rs.getInt("user_id"));
-                message.setAccount(rs.getString("account"));
-                message.setName(rs.getString("name"));
-                message.setCreatedDate(rs.getTimestamp("created_date"));
+      List<UserMessage> messages = new ArrayList<UserMessage>();
+      try {
+    	  while (rs.next()) {
+    		  UserMessage message = new UserMessage();
+              message.setId(rs.getInt("id"));
+              message.setText(rs.getString("text"));
+              message.setUserId(rs.getInt("user_id"));
+              message.setAccount(rs.getString("account"));
+              message.setName(rs.getString("name"));
+              message.setCreatedDate(rs.getTimestamp("created_date"));
 
-                messages.add(message);
+              messages.add(message);
             }
             return messages;
         } finally {

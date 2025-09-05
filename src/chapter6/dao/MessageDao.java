@@ -146,23 +146,23 @@ public class MessageDao {
 
     private List<Message> toMessages(ResultSet rs) throws SQLException {
 
-            List<Message> messages = new ArrayList<Message>();
-            try {
-                while (rs.next()) {
-                    Message message = new Message();
-                    message.setId(rs.getInt("id"));
-                    message.setUserId(rs.getInt("user_id"));
-                    message.setText(rs.getString("text"));
-                    message.setCreatedDate(rs.getTimestamp("created_date"));
-                    message.setUpdatedDate(rs.getTimestamp("updated_date"));
+    	List<Message> messages = new ArrayList<Message>();
+    	try {
+    		while (rs.next()) {
+    			Message message = new Message();
+                message.setId(rs.getInt("id"));
+                message.setUserId(rs.getInt("user_id"));
+                message.setText(rs.getString("text"));
+                message.setCreatedDate(rs.getTimestamp("created_date"));
+                message.setUpdatedDate(rs.getTimestamp("updated_date"));
 
-                    messages.add(message);
-                }
-                return messages;
-            } finally {
-                close(rs);
-           }
+                messages.add(message);
+             }
+    		return messages;
+    	} finally {
+    		close(rs);
         }
+    }
 }
 
 
